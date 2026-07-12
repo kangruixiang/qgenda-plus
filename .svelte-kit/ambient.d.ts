@@ -50,8 +50,8 @@ declare module '$env/static/private' {
 	export const ComSpec: string;
 	export const COPILOT_DEBUG_NONCE: string;
 	export const DriverData: string;
-	export const EFC_11132_1592913036: string;
-	export const EFC_11132_4126798990: string;
+	export const EFC_11240_1592913036: string;
+	export const EFC_11240_4126798990: string;
 	export const GIT_ASKPASS: string;
 	export const GOPATH: string;
 	export const HOMEDRIVE: string;
@@ -113,6 +113,7 @@ declare module '$env/static/private' {
 	export const VSCODE_PYTHON_AUTOACTIVATE_GUARD: string;
 	export const windir: string;
 	export const ZES_ENABLE_SYSMAN: string;
+	export const __COMPAT_LAYER: string;
 }
 
 /**
@@ -211,8 +212,8 @@ declare module '$env/dynamic/private' {
 		ComSpec: string;
 		COPILOT_DEBUG_NONCE: string;
 		DriverData: string;
-		EFC_11132_1592913036: string;
-		EFC_11132_4126798990: string;
+		EFC_11240_1592913036: string;
+		EFC_11240_4126798990: string;
 		GIT_ASKPASS: string;
 		GOPATH: string;
 		HOMEDRIVE: string;
@@ -274,6 +275,7 @@ declare module '$env/dynamic/private' {
 		VSCODE_PYTHON_AUTOACTIVATE_GUARD: string;
 		windir: string;
 		ZES_ENABLE_SYSMAN: string;
+		__COMPAT_LAYER: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
 	}

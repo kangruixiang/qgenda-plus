@@ -1,9 +1,10 @@
 <script lang="ts">
 	import Papa from 'papaparse';
-	import { PieChart } from 'layerchart';
-	import { schemeTableau10 } from 'd3-scale-chromatic';
+	import { monthlyHeatmap } from '$lib/monthlyHeatmap';
 
-	import { Check, Clipboard, Computer, Mail } from '@lucide/svelte';
+	import { Computer, Mail } from '@lucide/svelte';
+
+	import { SvelteMap } from 'svelte/reactivity';
 
 	let inputText = $state('');
 	let resultText = $state();
@@ -23,42 +24,69 @@
 	let selectedStaff = $state('');
 	let personRows = $state<ScheduleRow[]>([]);
 	let taskCounts: Record<string, number> = $state({});
-	let pieData = $derived(
-		Object.entries(taskCounts).map(([task, count]) => ({
-			task,
-			count
-		}))
-	);
+	const counts = new SvelteMap<string, number>();
+	let heatmapData = $derived.by(() => {
+		return Array.from(counts.entries()).map(([key, count]) => {
+			const [task, month] = key.split('|');
 
-	async function copyFull() {
-		await navigator.clipboard.writeText(resultText.innerText);
-		copiedFull = true;
-		setTimeout(() => {
-			copiedFull = false;
-		}, 1000);
-	}
+			return {
+				task,
+				month: new Date(`${month}-01`),
+				count
+			};
+		});
+	});
+
+	let taskData = $derived.by(() => {
+		// converts object to array of arrays and then map to array of objects and sort by count descending
+		const data = Object.entries(taskCounts)
+			.map(([task, count]) => ({
+				task,
+				count
+			}))
+			.sort((a, b) => b.count - a.count);
+
+		const total = data.reduce((sum, item) => sum + item.count, 0);
+
+		return data.map((item) => ({
+			...item,
+			percent: (item.count / total) * 100
+		}));
+	});
+
+	let maxCount = $derived(Math.max(...taskData.map((d) => d.count)));
 
 	function getTaskCounts() {
 		taskCounts = {};
+		counts.clear();
 
 		// gets all rows for selected staff
 		personRows = rows.filter((row: any) => row['Staff Last Name'] === selectedStaff);
 
 		// gets task counts for selected staff
 		for (const row of personRows) {
-			const task = row['Task Abbreviation'];
-			if (task in taskCounts) {
-				if (task.includes('AM') || task.includes('PM')) {
-					taskCounts[task] += 0.5;
-				} else {
-					taskCounts[task]++;
-				}
+			const originalTask = row['Task Abbreviation'].replace(/-$/, '').trim();
+
+			const task = originalTask.replace(/\s*\(?(AM|PM)\)?/, '');
+			const isHalfDay = task !== originalTask;
+
+			taskCounts[task] ??= 0;
+
+			taskCounts[task] += isHalfDay ? 0.5 : 1;
+
+			// count the number of times for each month
+			const date = new Date(row['Schedule Date']);
+
+			const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+			const key = `${task}|${month}`;
+
+			if (!counts.has(key)) {
+				counts.set(key, 1);
 			} else {
-				taskCounts[task] = 1;
+				counts.set(key, counts.get(key)! + 1);
 			}
 		}
-
-		console.log('pie', pieData);
 	}
 
 	function handleFile(event: Event) {
@@ -80,31 +108,10 @@
 	}
 </script>
 
-{#snippet copyClear(copyType: string, copyStatus: boolean, copy: () => void)}
-	<div class="flex w-full flex-col md:flex-row gap-y-2 gap-x-2">
-		<button
-			disabled={copyStatus}
-			onclick={copy}
-			class="btn flex items-center gap-x-2 btn-primary grow"
-			>{#if copyStatus}
-				<Check size={18} />Copied
-			{:else}
-				<Clipboard size={18} />Copy {copyType}
-			{/if}
-		</button>
-		<button onclick={() => (inputText = '')} class="btn grow">Clear</button>
-	</div>
-{/snippet}
-
-<h1 class="pb-3 text-primary font-semibold">Template Starter for Sveltekit Page</h1>
-<p class="prose max-w-none pb-4">
-	Use this repository as starting template for Sveltekit page, with tailwindcss, Jost as default
-	font, oklch, and daisyUI.
-</p>
+<h1 class="pb-3 text-primary font-semibold">Qgenda Plus</h1>
+<p class="prose max-w-none pb-4">Get analysis of your Qgenda schedule.</p>
 
 <div class="flex flex-col gap-y-4">
-	<h2>{selectedStaff}</h2>
-
 	<input type="file" accept=".csv" onchange={handleFile} />
 
 	<select bind:value={selectedStaff} class="select" onchange={getTaskCounts}>
@@ -114,11 +121,38 @@
 		{/each}
 	</select>
 
-	{JSON.stringify(taskCounts, null, 2)}
+	<hr />
+
+	<h2>{selectedStaff}</h2>
 
 	{#if selectedStaff}
-		chart:
-		<PieChart data={pieData} key="task" value="count" height={300} cRange={schemeTableau10} />
+		<!-- chart:
+		<PieChart data={taskData} key="task" value="count" height={300} cRange={schemeTableau10} /> -->
+
+		<div class="space-y-3">
+			{#each taskData as item, i (item)}
+				<div class="grid grid-cols-12 gap-y-golden-sm items-center hover:bg-base-200 px-golden-md">
+					<div class="col-span-3 my-golden-sm">
+						{item.task}
+					</div>
+
+					<div class="bg-base-300 h-6 col-span-8 border border-black">
+						<div class="bg-primary h-6" style={`width: ${(item.count / maxCount) * 100}%`}></div>
+					</div>
+
+					<div class="col-span-1 text-right">
+						<span class="text-lg">{item.count}</span>
+						<span class="text-sm text-zinc-600">days</span>
+					</div>
+				</div>
+			{/each}
+		</div>
+
+		{#each heatmapData as item, i (item)}
+			{item.task} - {item.count}
+		{/each}
+
+		<div use:monthlyHeatmap={heatmapData}></div>
 	{/if}
 </div>
 
