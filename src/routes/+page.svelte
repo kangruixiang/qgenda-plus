@@ -1,29 +1,15 @@
 <script lang="ts">
-	import Papa from 'papaparse';
-	import { monthlyHeatmap } from '$lib/monthlyHeatmap';
-
 	import { Computer, Mail } from '@lucide/svelte';
-
 	import { SvelteMap } from 'svelte/reactivity';
 
-	let inputText = $state('');
-	let resultText = $state();
-	let notification = $state('');
-	let copiedFull = $state(false);
+	import { monthlyHeatmap } from '$lib/monthlyHeatmap';
+	import { FileHandlerState, type ScheduleRow } from './utils.svelte';
 
-	type ScheduleRow = {
-		'Schedule Date': string;
-		'Task Abbreviation': string;
-		'Schedule Start Time': string;
-		'Schedule End Time': string;
-		'Staff Last Name': string;
-	};
-
-	let rows: ScheduleRow[] = $state([]);
-	let staffNames = $state<string[]>([]);
 	let selectedStaff = $state('');
 	let personRows = $state<ScheduleRow[]>([]);
 	let taskCounts: Record<string, number> = $state({});
+	const data = new FileHandlerState();
+
 	const counts = new SvelteMap<string, number>();
 	let heatmapData = $derived.by(() => {
 		return Array.from(counts.entries()).map(([key, count]) => {
@@ -61,7 +47,7 @@
 		counts.clear();
 
 		// gets all rows for selected staff
-		personRows = rows.filter((row: any) => row['Staff Last Name'] === selectedStaff);
+		personRows = data.rows.filter((row: any) => row['Staff Last Name'] === selectedStaff);
 
 		// gets task counts for selected staff
 		for (const row of personRows) {
@@ -88,37 +74,21 @@
 			}
 		}
 	}
-
-	function handleFile(event: Event) {
-		const file = (event.target as HTMLInputElement).files?.[0];
-
-		if (!file) return;
-
-		Papa.parse(file, {
-			header: true,
-			skipEmptyLines: true,
-			worker: true,
-			complete: ({ data }) => {
-				rows = data;
-
-				// gets staff names
-				staffNames = Array.from(new Set(data.map((row: any) => row['Staff Last Name']).sort()));
-			}
-		});
-	}
 </script>
 
 <h1 class="pb-3 text-primary font-semibold">Qgenda Plus</h1>
 <p class="prose max-w-none pb-4">Get analysis of your Qgenda schedule.</p>
 
 <div class="flex flex-col gap-y-4">
-	<input type="file" accept=".csv" onchange={handleFile} />
+	<input type="file" accept=".csv" onchange={data.handleFile} />
 
 	<select bind:value={selectedStaff} class="select" onchange={getTaskCounts}>
 		<option disabled selected>Name</option>
-		{#each staffNames as name (name)}
-			<option>{name}</option>
-		{/each}
+		{#if data.staffNames.length > 0}
+			{#each data.staffNames as name (name)}
+				<option>{name}</option>
+			{/each}
+		{/if}
 	</select>
 
 	<hr />
