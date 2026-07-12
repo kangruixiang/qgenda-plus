@@ -25,6 +25,27 @@
 
 @theme {
 	--font-display: 'Jost',  'sans-serif';
+	--heatmap-hue: 192.23;
+	--heatmap-chroma: 0.0635;
+}
+
+
+.heatmap-1 {
+	background: oklch(0.90 0.0335 var(--heatmap-hue));
+}
+
+.heatmap-2 {
+	background: oklch(0.75 0.0535 var(--heatmap-hue));
+}
+
+.heatmap-3 {
+	background: oklch(0.60 var(--heatmap-chroma) var(--heatmap-hue));
+	color: var(--color-slate-100)
+}
+
+.heatmap-4 {
+	background: oklch(0.4556 var(--heatmap-chroma) var(--heatmap-hue));
+	color: var(--color-slate-100)
 }
 
 h1 {
