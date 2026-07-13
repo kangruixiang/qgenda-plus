@@ -4,6 +4,7 @@
 	import { FileHandlerState } from '$lib/utils.svelte';
 	import Heatmap from '$lib/components/Heatmap.svelte';
 	import Count from '$lib/components/Count.svelte';
+	import Instructions from '$lib/components/Instructions.svelte';
 
 	const data = new FileHandlerState();
 </script>
@@ -11,23 +12,31 @@
 <h1 class="pb-3 text-primary font-semibold">Qgenda Plus</h1>
 <p class="prose max-w-none pb-4">Get analysis and insight of your Qgenda schedule.</p>
 
-<div class="flex flex-col gap-y-4">
-	<input type="file" accept=".csv" onchange={data.handleFile} />
+<Instructions />
+<div class="flex flex-col gap-y-4 mt-10">
+	<fieldset class="fieldset">
+		<legend class="fieldset-legend">Upload Qgenda CSV export below:</legend>
+		<input type="file" class="file-input file-input-lg" accept=".csv" onchange={data.handleFile} />
+	</fieldset>
 
-	<select bind:value={data.selectedStaff} class="select" onchange={data.getTaskCounts}>
-		<option disabled selected>Name</option>
-		{#if data.staffNames.length > 0}
-			{#each data.staffNames as name (name)}
-				<option>{name}</option>
-			{/each}
-		{/if}
-	</select>
+	{#if data.staffNames.length > 0}
+		<fieldset class="fieldset">
+			<legend class="fieldset-legend">Pick Staff</legend>
+			<select bind:value={data.selectedStaff} class="select" onchange={data.getTaskCounts}>
+				<option disabled selected>Name</option>
+				{#if data.staffNames.length > 0}
+					{#each data.staffNames as name (name)}
+						<option>{name}</option>
+					{/each}
+				{/if}
+			</select>
+		</fieldset>
+	{/if}
 
 	<hr class="text-base-content/70 mb-10" />
 
 	{#if data.selectedStaff}
 		<Count {data} />
-		<!-- <hr class="text-base-content/70 mb-8" /> -->
 		<Heatmap {data} />
 	{/if}
 </div>

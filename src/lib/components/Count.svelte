@@ -13,7 +13,7 @@
 		Task by Days
 	</h2>
 
-	<div class=" card-body">
+	<div class="card-body">
 		{#each data.taskObject as item, i (item)}
 			<div class="grid grid-cols-12 gap-y-golden-sm gap-x-golden-sm items-center hover:bg-base-200">
 				<div class="col-span-3 px-golden-sm my-golden-sm">

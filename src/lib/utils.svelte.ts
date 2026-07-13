@@ -121,7 +121,8 @@ export class FileHandlerState {
 				task,
 				count
 			}))
-			.sort((a, b) => b.count - a.count);
+			.sort((a, b) => a.task.localeCompare(b.task));
+		// b.count - a.count sort by count
 
 		const total = data.reduce((sum, item) => sum + item.count, 0);
 
