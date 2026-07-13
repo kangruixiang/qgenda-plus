@@ -8,36 +8,77 @@
 	let { data }: Props = $props();
 
 	const colors = ['heatmap-0', 'heatmap-1', 'heatmap-2', 'heatmap-3', 'heatmap-4'];
+
+	const textColors = [
+		'text-base', // 0
+		'text-neutral-900',
+		'text-neutral',
+		'text-neutral-50',
+		'text-neutral-50' // 4
+	];
 </script>
 
-<h2>Distribution by Month</h2>
-<div
-	class="grid gap-golden-md mx-golden-md grid-cols-12 overflow-x-auto"
-	style={`grid-template-columns: 12rem repeat(${data.months.length}, 30px)`}
->
-	<div></div>
-	{#each data.months as month (month)}
-		<div class="text-center w-full">
-			{new Date(`${month}-01`).toLocaleDateString(undefined, { month: 'short' })}
-		</div>
-	{/each}
-
-	{#each data.taskObject as item, index (item.task)}
-		<div class={index % 2 === 0 ? 'bg-base-200' : ''}>
-			{item.task}
-		</div>
-
+<div class="card card-lg mt-10">
+	<h2 class="card-title underline text-secondary decoration-double decoration-2 mb-6">
+		Distribution by Month
+	</h2>
+	<div
+		class="grid card-body gap-golden-md items-center mx-golden-md overflow-x-auto"
+		style={`grid-template-columns: 13rem repeat(${data.months.length}, 30px)`}
+	>
+		<div></div>
 		{#each data.months as month (month)}
-			{@const count = data.counts.get(`${item.task}|${month}`) ?? 0}
-
-			{@const level = data.getLevel(item.task, count)}
-
-			<div
-				class={`h-8 w-8 text-center rounded-sm flex items-center select-none   hover:border-primary hover:border justify-center justify-self-center ${colors[level]}`}
-				title={`${item.task}: ${count}`}
-			>
-				{count}
+			<div class="text-center font-semibold text-xs w-full text-base-content/50">
+				{new Date(`${month}-02`).toLocaleDateString(undefined, { month: 'short' })}
 			</div>
 		{/each}
-	{/each}
+
+		{#each data.taskObject as item, index (item.task)}
+			<div class="{index % 2 === 0 ? 'bg-base-200' : ''} pl-golden-sm">
+				{item.task}
+			</div>
+
+			{#each data.months as month (month)}
+				<!-- gets the count for the task for this month -->
+				{@const count = data.counts.get(`${item.task}|${month}`) ?? 0}
+
+				<!-- // gets the level of intensity -->
+				{@const level = data.getLevel(item.task, count)}
+
+				<div
+					class={`h-8 w-8 text-center rounded-sm flex items-center select-none hover:border-primary hover:border justify-center justify-self-center ${colors[level]} ${textColors[level]}`}
+					title={`${item.task}: ${count}`}
+				>
+					{count}
+				</div>
+			{/each}
+		{/each}
+	</div>
+
+	<div class="mx-golden-2xl">
+		Different color intensity corresponds to level of workload for that task compared to its average
+		for the year.
+
+		<div class="flex m-golden-md space-x-golden-sm">
+			<div class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[0]}`}>
+				0
+			</div>
+			<div
+				class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[1]} text-neutral-900`}
+			>
+				1
+			</div>
+			<div
+				class={`h-8 w-8 rounded-sm flex items-center justify-center select-none text-black ${colors[2]}`}
+			>
+				2
+			</div>
+			<div class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[3]}`}>
+				3
+			</div>
+			<div class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[4]}`}>
+				4
+			</div>
+		</div>
+	</div>
 </div>

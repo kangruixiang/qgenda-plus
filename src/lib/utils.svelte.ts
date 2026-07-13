@@ -162,11 +162,13 @@ export class FileHandlerState {
 	getLevel(task: string, count: number) {
 		if (count === 0) return 0;
 
-		const intensity = count / (this.taskTotals.get(task) ?? 1);
+		const average = (this.taskTotals.get(task) ?? 0) / this.months.length;
 
-		if (intensity < 0.1) return 1;
-		if (intensity < 0.2) return 2;
-		if (intensity < 0.35) return 3;
+		const ratio = count / average;
+
+		if (ratio < 0.5) return 1;
+		if (ratio < 1) return 2;
+		if (ratio < 1.5) return 3;
 
 		return 4;
 	}

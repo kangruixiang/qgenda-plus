@@ -23,17 +23,17 @@
 		{/if}
 	</select>
 
-	<hr />
+	<hr class="text-base-content/70 mb-10" />
 
 	{#if data.selectedStaff}
 		<Count {data} />
-		<hr />
+		<!-- <hr class="text-base-content/70 mb-8" /> -->
 		<Heatmap {data} />
 	{/if}
 </div>
 
 <div class="mt-4 justify-end text-sm text-right flex gap-x-2">
 	Made by Kang.
-	<a href="mailto:kxiang.wakehealth.edu"><Mail /></a>
-	<a href="https://github.com/kangruixiang/bronchmeds"><Computer /></a>
+	<a href="mailto:kang.xiang@wfusm.edu"><Mail /></a>
+	<a href="https://github.com/kangruixiang/qgendaplus"><Computer /></a>
 </div>

@@ -11,12 +11,14 @@
 	name: 'light';
 	default: true;
 	--color-primary: oklch(0.4556 0.0635 192.23);
+	--color-secondary: oklch(0.4836 0.0761 78.37)
 }
 
 @plugin "daisyui/theme" {
 	name: 'dark';
 	prefersdark: true;
 	--color-primary: oklch(0.4556 0.0635 192.23);
+	--color-secondary: oklch(0.6836 0.0561 78.37)
 }
 
 /* * {
@@ -40,12 +42,10 @@
 
 .heatmap-3 {
 	background: oklch(0.60 var(--heatmap-chroma) var(--heatmap-hue));
-	color: var(--color-slate-100)
 }
 
 .heatmap-4 {
 	background: oklch(0.4556 var(--heatmap-chroma) var(--heatmap-hue));
-	color: var(--color-slate-100)
 }
 
 h1 {
