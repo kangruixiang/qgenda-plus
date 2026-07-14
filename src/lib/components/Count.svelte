@@ -33,5 +33,12 @@
 				</div>
 			</div>
 		{/each}
+
+		<div class="prose max-w-none border-t border-base-content/70 mt-golden-sm pt-golden-md">
+			Weekend days are excluded from normal tasks. For example, MICU A weekend are not counted in
+			MICU A days. Consults/PPT weekend should be the same number as MICU C weekend since they cover
+			the same schedule. Half day (AM or PM) shifts are counted as 0.5 days. Nights are counted as 1
+			day.
+		</div>
 	</div>
 </div>

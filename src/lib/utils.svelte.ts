@@ -1,4 +1,6 @@
+import dayjs from 'dayjs';
 import Papa from 'papaparse';
+
 import { SvelteSet, SvelteMap, SvelteDate } from 'svelte/reactivity';
 
 export type ScheduleRow = {
@@ -60,17 +62,36 @@ export class FileHandlerState {
 			// for room 9 procedures with extra -
 			const originalTask = row['Task Abbreviation'].replace(/-$/, '').trim();
 
+			// checks if task is halfday
 			const task = originalTask.replace(/\s*\(?(AM|PM)\)?/, '');
 			const isHalfDay = task !== originalTask;
 
+			// adds weekend days separately
+			const date = dayjs(row['Schedule Date']);
+			const weekendTasks = [
+				'MICU A',
+				'MICU B',
+				'MICU C',
+				'MICU 0',
+				'MICU O',
+				'Lex ICU',
+				'Consults/PPT'
+			];
+
+			let finalTask = task;
+
+			if (weekendTasks.includes(task) && (date.day() === 0 || date.day() === 6)) {
+				finalTask = `${task} Weekend`;
+			}
+
 			// initiates task to 0 otherwise gets undefined
-			this.taskCounts[task] ??= 0;
+			this.taskCounts[finalTask] ??= 0;
 
 			// count days and half days
-			this.taskCounts[task] += isHalfDay ? 0.5 : 1;
+			this.taskCounts[finalTask] += isHalfDay ? 0.5 : 1;
 
 			// total the task count for each month
-			this.getMonthlyCount(row['Schedule Date'], task, isHalfDay);
+			this.getMonthlyCount(row['Schedule Date'], finalTask, isHalfDay);
 		}
 
 		this.getTaskTotals(); // gets task totals for all year

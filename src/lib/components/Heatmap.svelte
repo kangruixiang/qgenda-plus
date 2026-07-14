@@ -55,28 +55,36 @@
 		{/each}
 	</div>
 
-	<div class="mx-golden-2xl">
+	<div
+		class="mx-golden-2xl prose max-w-none border-t border-base-content/70 mt-golden-sm pt-golden-md"
+	>
 		Different color intensity corresponds to level of workload for that task compared to its average
 		for the year.
 
 		<div class="flex m-golden-md space-x-golden-sm">
-			<div class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[0]}`}>
+			<div
+				class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[0]} ${textColors[0]}`}
+			>
 				0
 			</div>
 			<div
-				class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[1]} text-neutral-900`}
+				class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[1]} ${textColors[1]} text-neutral-900`}
 			>
 				1
 			</div>
 			<div
-				class={`h-8 w-8 rounded-sm flex items-center justify-center select-none text-black ${colors[2]}`}
+				class={`h-8 w-8 rounded-sm flex items-center justify-center select-none text-black ${colors[2]} ${textColors[2]}`}
 			>
 				2
 			</div>
-			<div class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[3]}`}>
+			<div
+				class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[3]} ${textColors[3]}`}
+			>
 				3
 			</div>
-			<div class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[4]}`}>
+			<div
+				class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[4]} ${textColors[4]}`}
+			>
 				4
 			</div>
 		</div>

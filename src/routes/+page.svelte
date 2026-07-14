@@ -16,7 +16,7 @@
 <div class="flex flex-col gap-y-4 mt-10">
 	<fieldset class="fieldset">
 		<legend class="fieldset-legend">Upload Qgenda CSV export below:</legend>
-		<input type="file" class="file-input file-input-lg" accept=".csv" onchange={data.handleFile} />
+		<input type="file" class="file-input" accept=".csv" onchange={data.handleFile} />
 	</fieldset>
 
 	{#if data.staffNames.length > 0}
