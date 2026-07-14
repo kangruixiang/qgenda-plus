@@ -37,7 +37,6 @@ export class FileHandlerState {
 		Papa.parse(file, {
 			header: true,
 			skipEmptyLines: true,
-			worker: true,
 			complete: ({ data }) => {
 				console.log(data[0]);
 				this.rows = data;
