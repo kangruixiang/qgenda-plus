@@ -45,8 +45,8 @@
 					/>
 				</div>
 
-				<div class="col-span-1 text-right pr-golden-sm">
-					<span class="text-lg">{item.count * item.multiplier}</span>
+				<div class="col-span-1 whitespace-nowrap text-right pr-golden-sm">
+					<span class="text-lg">{Math.round(item.count * item.multiplier * 100) / 100}</span>
 					<span class="text-xs font-semibold text-base-content/50">days</span>
 				</div>
 			</div>

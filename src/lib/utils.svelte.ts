@@ -143,10 +143,17 @@ export class FileHandlerState {
 			'Travel'
 		]);
 
+		const CVHPTasks = new SvelteSet([
+			'ANES- CV ICU Att N',
+			'ANES- CV ICU Att N Wknd',
+			'ANES- HP ICU Hol N'
+		]);
+
 		const halfTasks = new SvelteSet(['Night MICU Attending', 'Procedures (room 9 MS PPT)']);
 
 		if (zeroTasks.has(task)) return 0;
 		if (halfTasks.has(task)) return 0.5;
+		if (CVHPTasks.has(task)) return 1.15;
 		return 1;
 	};
 
