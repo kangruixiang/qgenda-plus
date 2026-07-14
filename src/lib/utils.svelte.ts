@@ -139,7 +139,8 @@ export class FileHandlerState {
 			'Admin',
 			'Triage',
 			'Night Pulm Attending',
-			'Consults/PPT Weekend'
+			'Consults/PPT Weekend',
+			'Travel'
 		]);
 
 		const halfTasks = new SvelteSet(['Night MICU Attending', 'Procedures (room 9 MS PPT)']);
