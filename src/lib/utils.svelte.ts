@@ -6,8 +6,6 @@ import { SvelteSet, SvelteMap, SvelteDate } from 'svelte/reactivity';
 export type ScheduleRow = {
 	'Schedule Date': string;
 	'Task Abbreviation': string;
-	'Schedule Start Time': string;
-	'Schedule End Time': string;
 	'Staff Last Name': string;
 };
 
