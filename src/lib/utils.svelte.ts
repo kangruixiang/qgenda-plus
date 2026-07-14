@@ -30,6 +30,8 @@ export class FileHandlerState {
 	handleFile = (event: Event) => {
 		const file = (event.target as HTMLInputElement).files?.[0];
 
+		console.log(file, typeof file);
+
 		if (!file) return;
 
 		Papa.parse(file, {
@@ -37,6 +39,7 @@ export class FileHandlerState {
 			skipEmptyLines: true,
 			worker: true,
 			complete: ({ data }) => {
+				console.log(data[0]);
 				this.rows = data;
 
 				// gets staff names
