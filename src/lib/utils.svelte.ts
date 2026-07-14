@@ -22,7 +22,7 @@ export class FileHandlerState {
 	taskTotals = new SvelteMap<string, number>([]);
 
 	taskCounts: Record<string, number> = $state({});
-	taskObject = $state<{ task: string; count: number; percent: number }[]>([]);
+	taskObject = $state<{ task: string; count: number; multiplier: number }[]>([]);
 	heatmapData = $state<{ task: string; month: Date; count: number }[]>([]);
 
 	handleFile = (event: Event) => {
@@ -130,24 +130,45 @@ export class FileHandlerState {
 	};
 
 	/**  
+	// gets task multiplier 
+	*/
+	getTaskMultiplier = (task: string) => {
+		const zeroTasks = new SvelteSet([
+			'CME',
+			'VAC',
+			'Admin',
+			'Triage',
+			'Night Pulm Attending',
+			'Consults/PPT Weekend'
+		]);
+
+		const halfTasks = new SvelteSet(['Night MICU Attending', 'Procedures (room 9 MS PPT)']);
+
+		if (zeroTasks.has(task)) return 0;
+		if (halfTasks.has(task)) return 0.5;
+		return 1;
+	};
+
+	/**  
 	// gets task data for selected staff.  
 	*/
 	getTaskObject = () => {
 		// converts object to array of arrays and then map to array of objects and sort by count descending
-		const data = Object.entries(this.taskCounts)
+		this.taskObject = Object.entries(this.taskCounts)
 			.map(([task, count]) => ({
 				task,
-				count
+				count,
+				multiplier: this.getTaskMultiplier(task)
 			}))
 			.sort((a, b) => a.task.localeCompare(b.task));
 		// b.count - a.count sort by count
 
-		const total = data.reduce((sum, item) => sum + item.count, 0);
+		// const total = data.reduce((sum, item) => sum + item.count, 0);
 
-		this.taskObject = data.map((item) => ({
-			...item,
-			percent: (item.count / total) * 100
-		}));
+		// this.taskObject = data.map((item) => ({
+		// 	...item,
+		// 	percent: (item.count / total) * 100
+		// }));
 	};
 
 	/**  
