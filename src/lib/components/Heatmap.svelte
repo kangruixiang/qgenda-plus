@@ -8,6 +8,7 @@
 	let { data }: Props = $props();
 
 	const colors = ['heatmap-0', 'heatmap-1', 'heatmap-2', 'heatmap-3', 'heatmap-4'];
+	const heatmapColorLevel = [0, 1, 2, 3, 4];
 
 	const textColors = [
 		'text-base', // 0
@@ -62,31 +63,13 @@
 		for the year.
 
 		<div class="flex m-golden-md space-x-golden-sm">
-			<div
-				class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[0]} ${textColors[0]}`}
-			>
-				0
-			</div>
-			<div
-				class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[1]} ${textColors[1]} text-neutral-900`}
-			>
-				1
-			</div>
-			<div
-				class={`h-8 w-8 rounded-sm flex items-center justify-center select-none text-black ${colors[2]} ${textColors[2]}`}
-			>
-				2
-			</div>
-			<div
-				class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[3]} ${textColors[3]}`}
-			>
-				3
-			</div>
-			<div
-				class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[4]} ${textColors[4]}`}
-			>
-				4
-			</div>
+			{#each heatmapColorLevel as level (level)}
+				<div
+					class={`h-8 w-8 rounded-sm flex items-center justify-center select-none ${colors[level]} ${textColors[level]}`}
+				>
+					{level}
+				</div>
+			{/each}
 		</div>
 	</div>
 </div>
