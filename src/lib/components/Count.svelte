@@ -15,6 +15,7 @@
 	let futureTotalDays = $derived.by(() =>
 		data.futureTaskObject.reduce((sum, item) => sum + item.count * item.multiplier, 0)
 	);
+	let differenceDays = $derived(futureTotalDays - totalDays);
 </script>
 
 <div class="card card-lg">
@@ -110,20 +111,13 @@
 				</div>
 
 				<div class="col-span-2 text-right pr-golden-sm whitespace-nowrap">
-					{#snippet snippetShiftCount(count: number, multiplier: number)}
-						<span class="text-lg">{Math.round(count * multiplier * 100) / 100}</span>
+					<span class="text-lg">{Math.round(item.count * item.multiplier * 100) / 100}</span>
 
-						<span class="text-xs font-semibold text-base-content/50">shifts</span>
-					{/snippet}
+					<span class="text-xs font-semibold text-base-content/50">shifts</span>
 
-					{@render snippetShiftCount(item.count, item.multiplier)}
-
-					{#if makeFutureTasks}
+					{#if makeFutureTasks && newItem.count - item.count != 0}
 						<hr class="text-base-300 ml-golden-lg" />
-					{/if}
-
-					{#if makeFutureTasks}
-						{@render snippetShiftCount(newItem.count, item.multiplier)}
+						{newItem.count - item.count > 0 ? '+' : ''}{newItem.count - item.count}
 					{/if}
 				</div>
 			</div>
@@ -132,18 +126,27 @@
 		<div
 			class="border-t pr-golden-sm border-base-content/70 mt-golden-sm pt-golden-md grid grid-cols-12 gap-y-golden-sm gap-x-golden-sm items-center"
 		>
-			{#snippet snippetTotalCount(title: string, totalDays: number)}
-				<div class="col-span-8 text-xl">{title}</div>
-				<div class="col-span-2"></div>
-				<div class="col-span-2 text-right whitespace-nowrap">
+			{#snippet snippetTotalCount(title: string, totalDays: number, future: boolean)}
+				<div class="col-span-7 text-xl">{title}</div>
+				<div class="col-span-1"></div>
+				<div class="col-span-4 text-right whitespace-nowrap">
 					<span class="text-4xl">{totalDays}</span>
+					{#if future}
+						<span class="text-base-content/50"
+							>({differenceDays > 0 ? '+' : '-'}{differenceDays})</span
+						>
+					{/if}
 					<span class="text-xs font-semibold text-base-content/50">shifts</span>
 				</div>
 			{/snippet}
 
-			{@render snippetTotalCount('Total Number of Shifts Worked After Calculation', totalDays)}
+			{@render snippetTotalCount(
+				'Total Number of Shifts Worked After Calculation',
+				totalDays,
+				false
+			)}
 			{#if makeFutureTasks}
-				{@render snippetTotalCount('Total Hypothetical Shifts', futureTotalDays)}
+				{@render snippetTotalCount('Total Hypothetical Shifts', futureTotalDays, true)}
 			{/if}
 		</div>
 	</div>
