@@ -23,6 +23,7 @@ export class FileHandlerState {
 
 	taskCounts: Record<string, number> = $state({});
 	taskObject = $state<{ task: string; count: number; multiplier: number }[]>([]);
+	futureTaskObject = $state<{ task: string; count: number; multiplier: number }[]>([]);
 	heatmapData = $state<{ task: string; month: Date; count: number }[]>([]);
 
 	handleFile = (event: Event) => {
@@ -44,7 +45,7 @@ export class FileHandlerState {
 		});
 	};
 
-	/**  
+	/**
 	// gets rows for selected staff and counts the tasks as well as total for each month
 	*/
 	getTaskCounts = () => {
@@ -111,7 +112,7 @@ export class FileHandlerState {
 		}
 	};
 
-	/**  
+	/**
 	// total counts for individual task for person
 	*/
 	getTaskTotals = () => {
@@ -122,15 +123,15 @@ export class FileHandlerState {
 		}
 	};
 
-	/**  
+	/**
 	// calculate total count for selected staff, including all of the tasks and all of the months. Used to calculate percentage
 	*/
 	getTotalCount = () => {
 		this.totalCount = Math.max(...this.taskObject.map((d) => d.count));
 	};
 
-	/**  
-	// gets task multiplier 
+	/**
+	// gets task multiplier
 	*/
 	getTaskMultiplier = (task: string) => {
 		const zeroTasks = new SvelteSet([
@@ -157,8 +158,8 @@ export class FileHandlerState {
 		return 1;
 	};
 
-	/**  
-	// gets task data for selected staff.  
+	/**
+	// gets task data for selected staff.
 	*/
 	getTaskObject = () => {
 		// converts object to array of arrays and then map to array of objects and sort by count descending
@@ -169,6 +170,7 @@ export class FileHandlerState {
 				multiplier: this.getTaskMultiplier(task)
 			}))
 			.sort((a, b) => a.task.localeCompare(b.task));
+		this.futureTaskObject = this.taskObject.map((item) => ({ ...item }));
 		// b.count - a.count sort by count
 
 		// const total = data.reduce((sum, item) => sum + item.count, 0);
@@ -179,8 +181,8 @@ export class FileHandlerState {
 		// }));
 	};
 
-	/**  
-	// gets all of the unique months  
+	/**
+	// gets all of the unique months
 	*/
 	getMonthsBetween = () => {
 		const dates = this.rows.map((row) => new SvelteDate(row['Schedule Date']));
@@ -204,8 +206,8 @@ export class FileHandlerState {
 		this.months = [...new SvelteSet(monthsWithDuplicates)].sort();
 	};
 
-	/**  
-	// gets level of intensity for heatmap  
+	/**
+	// gets level of intensity for heatmap
 	*/
 	getLevel(task: string, count: number) {
 		if (count === 0) return 0;

@@ -1,7 +1,6 @@
 /* custom font */
 @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900');
 
-
 @import 'tailwindcss';
 @import 'tw-golden-spacing';
 @plugin '@tailwindcss/typography';
@@ -10,14 +9,14 @@
 	name: 'light';
 	default: true;
 	--color-primary: oklch(0.4556 0.0635 192.23);
-	--color-secondary: oklch(0.4836 0.0761 78.37)
+	--color-secondary: oklch(0.4836 0.0761 78.37);
 }
 
 @plugin "daisyui/theme" {
 	name: 'dark';
 	prefersdark: true;
 	--color-primary: oklch(0.4556 0.0635 192.23);
-	--color-secondary: oklch(0.6836 0.0561 78.37)
+	--color-secondary: oklch(0.6836 0.0561 78.37);
 }
 
 /* * {
@@ -25,14 +24,13 @@
 } */
 
 @theme {
-	--font-display: 'Jost',  'sans-serif';
+	--font-display: 'Jost', 'sans-serif';
 	--heatmap-hue: 192.23;
 	--heatmap-chroma: 0.0635;
 }
 
-
 .heatmap-1 {
-	background: oklch(0.90 0.0335 var(--heatmap-hue));
+	background: oklch(0.9 0.0335 var(--heatmap-hue));
 }
 
 .heatmap-2 {
@@ -40,7 +38,7 @@
 }
 
 .heatmap-3 {
-	background: oklch(0.60 var(--heatmap-chroma) var(--heatmap-hue));
+	background: oklch(0.6 var(--heatmap-chroma) var(--heatmap-hue));
 }
 
 .heatmap-4 {

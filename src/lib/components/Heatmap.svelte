@@ -23,6 +23,12 @@
 	<h2 class="card-title underline text-secondary decoration-double decoration-2 mb-6">
 		Distribution by Month
 	</h2>
+
+	<p class="prose">
+		Each number corresponds to actual number of shifts worked, not calculated. Different color
+		intensity corresponds to level of workload for that task compared to its average for the year.
+	</p>
+
 	<div
 		class="grid card-body gap-golden-md items-center mx-golden-md overflow-x-auto"
 		style={`grid-template-columns: 13rem repeat(${data.months.length}, 30px)`}
@@ -59,9 +65,6 @@
 	<div
 		class="mx-golden-2xl prose max-w-none border-t border-base-content/70 mt-golden-sm pt-golden-md"
 	>
-		Different color intensity corresponds to level of workload for that task compared to its average
-		for the year.
-
 		<div class="flex m-golden-md space-x-golden-sm">
 			{#each heatmapColorLevel as level (level)}
 				<div
